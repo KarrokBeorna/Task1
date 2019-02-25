@@ -59,8 +59,10 @@ fun interpol(mapa: Map<Int, Int>): Int {
     var fP = Pair(z, sortedMapa[z]!!)
     val sP: Pair<Int, Int>
     when {
-        z > x -> { sortedMapa.remove(z); l = sortedMapa.firstKey(); y = mapa[z]!! + (mapa[l]!! - mapa[z]!!) * (x - z) / (l - z) }
-        l < x -> { sortedMapa.remove(l); z = sortedMapa.lastKey(); y = mapa[z]!! + (mapa[l]!! - mapa[z]!!) * (x - z) / (l - z) }
+        z > x -> { sortedMapa.remove(z); l = sortedMapa.firstKey()
+            y = mapa[z]!! + (mapa[l]!! - mapa[z]!!) * (x - z) / (l - z) }
+        l < x -> { sortedMapa.remove(l); z = sortedMapa.lastKey()
+            y = mapa[z]!! + (mapa[l]!! - mapa[z]!!) * (x - z) / (l - z) }
         else -> for ((key, value) in sortedMapa) {
             when {
                 key == x -> { println(value); return value }
