@@ -4,7 +4,7 @@ import java.util.*
 data class Table(private val excel: SortedMap<Double, Double>) {
 
     fun adding(pair: Pair<Double, Double>) {
-        if (excel.keys.all {it != pair.first })
+        if (excel.keys.all { it != pair.first })
             excel[pair.first] = pair.second
         excel
     }
