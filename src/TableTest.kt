@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import java.lang.IllegalArgumentException
 
 internal class TableTest {
 
@@ -11,8 +12,13 @@ internal class TableTest {
 
     @Test
     fun adding() {
-        assertTrue(Table(sortedMapOf(pair1, pair2, pair3)).adding(15.07 to 20.00))
-        assertFalse(Table(sortedMapOf(pair1, pair2, pair3, pair4)).adding(15.06 to 20.01))
+        val family = Table(sortedMapOf(pair1, pair2, pair4))
+        family.adding(pair3)
+        assertEquals(Table(sortedMapOf(pair1, pair2, pair3, pair4)), family)
+
+        val trial = Table(sortedMapOf(pair1, pair2, pair3, pair4))
+        trial.adding(pair4)
+        assertEquals(Table(sortedMapOf(pair1, pair2, pair3, pair4)), trial)
     }
 
     @Test
@@ -29,9 +35,12 @@ internal class TableTest {
     @Test
     fun search() {
         assertEquals(pair3, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(13.05))
-        assertEquals(pair3, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search((18.09)))
+        assertEquals(pair3, Table(sortedMapOf(pair2, pair3, pair4)).search(15.06))
         assertEquals(pair3, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(21.56))
         assertEquals(pair4, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(5.63))
+        assertEquals(pair3, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(15.06))
+        assertEquals(pair1, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(40.05))
+        assertEquals(pair2, Table(sortedMapOf(pair1, pair2, pair3, pair4)).search(0.05))
     }
 
     @Test
@@ -40,6 +49,8 @@ internal class TableTest {
         assertEquals(5.62 to 198.4, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(5.62))
         assertEquals(15.06 to 20.00, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(15.06))
         assertEquals(10.0 to 172.91, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(10.0))
+        assertThrows(NoSuchElementException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(222.22)}
+        assertThrows(NoSuchElementException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(1.01)}
     }
 
     @Test

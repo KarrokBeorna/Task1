@@ -1,18 +1,28 @@
+import java.lang.Exception
 import java.util.*
 
 data class Table(private val excel: SortedMap<Double, Double>) {
 
-    fun adding(pair: Pair<Double, Double>): Boolean = excel.keys.all { it != pair.first }
+    fun adding(pair: Pair<Double, Double>) {
+        if (excel.keys.all {it != pair.first })
+            excel[pair.first] = pair.second
+        excel
+    }
 
     fun removing(x: Double) = excel.remove(x)
 
     fun search(x: Double): Pair<Double, Double> {
-        val first = excel.headMap(x).lastKey()
-        val second = excel.tailMap(x).firstKey()
         return when {
-            x == first || x == second -> x to excel[x]!!
-            x - first <= second - x -> first to excel[first]!!
-            else -> second to excel[second]!!
+            x <= excel.firstKey() -> excel.firstKey() to excel[excel.firstKey()]!! // Иначе при выходе из диапазона заданных ключей
+            x >= excel.lastKey() -> excel.lastKey() to excel[excel.lastKey()]!!    // выдает исключение, мол, не существует ключей меньше или больше заданного
+            else -> {
+                val first = excel.headMap(x).lastKey()
+                val second = excel.tailMap(x).firstKey()
+                when {
+                    x - first <= second - x -> first to excel[first]!!
+                    else -> second to excel[second]!!
+                }
+            }
         }
     }
 
@@ -20,8 +30,9 @@ data class Table(private val excel: SortedMap<Double, Double>) {
         val first = excel.headMap(x).lastKey()
         val second = excel.tailMap(x).firstKey()
         val y = excel[first]!! + (excel[second]!! - excel[first]!!) * (x - first) / (second - first)
-        return when (x) {
-            first, second -> x to excel[x]!!
+        return when {
+            x < first || x > second -> throw Exception()
+            x == first || x == second -> x to excel[x]!!
             else -> x to Math.round(y * 100.0) / 100.0
         }
     }
