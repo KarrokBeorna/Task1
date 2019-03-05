@@ -13,8 +13,8 @@ data class Table(private val excel: SortedMap<Double, Double>) {
 
     fun search(x: Double): Pair<Double, Double> {
         return when {
-            x <= excel.firstKey() -> excel.firstKey() to excel[excel.firstKey()]!! // Иначе при выходе из диапазона заданных ключей
-            x >= excel.lastKey() -> excel.lastKey() to excel[excel.lastKey()]!!    // выдает исключение, мол, не существует ключей меньше или больше заданного
+            x <= excel.firstKey() -> excel.firstKey() to excel[excel.firstKey()]!! // Иначе при взятии точки вне диапазона заданных
+            x >= excel.lastKey() -> excel.lastKey() to excel[excel.lastKey()]!!    // ключей выдает исключение NoSuchElementException
             else -> {
                 val first = excel.headMap(x).lastKey()
                 val second = excel.tailMap(x).firstKey()
@@ -31,7 +31,7 @@ data class Table(private val excel: SortedMap<Double, Double>) {
         val second = excel.tailMap(x).firstKey()
         val y = excel[first]!! + (excel[second]!! - excel[first]!!) * (x - first) / (second - first)
         return when {
-            x < first || x > second -> throw Exception()
+            first == null || second == null -> throw Exception()
             x == first || x == second -> x to excel[x]!!
             else -> x to Math.round(y * 100.0) / 100.0
         }
