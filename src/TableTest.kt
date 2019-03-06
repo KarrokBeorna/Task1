@@ -17,7 +17,7 @@ internal class TableTest {
         assertEquals(Table(sortedMapOf(pair1, pair2, pair3, pair4)), family)
 
         val trial = Table(sortedMapOf(pair1, pair2, pair3, pair4))
-        trial.adding(pair4)
+        trial.adding(15.06 to 20.01)
         assertEquals(Table(sortedMapOf(pair1, pair2, pair3, pair4)), trial)
     }
 
@@ -49,8 +49,8 @@ internal class TableTest {
         assertEquals(5.62 to 198.4, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(5.62))
         assertEquals(15.06 to 20.00, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(15.06))
         assertEquals(10.0 to 172.91, Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(10.0))
-        assertThrows(NoSuchElementException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(222.22)}
-        assertThrows(NoSuchElementException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(1.01)}
+        assertThrows(IllegalArgumentException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(222.22)}
+        assertThrows(IllegalArgumentException::class.java) {Table(sortedMapOf(pair1, pair2, pair3, pair4)).interpol(1.01)}
     }
 
     @Test
